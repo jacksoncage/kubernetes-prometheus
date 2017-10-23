@@ -5,7 +5,7 @@ kubectl --namespace monitoring create configmap --dry-run prometheus-rules \
   --from-file=configs/prometheus/rules \
   --output yaml \
     > ./manifests/prometheus/prometheus-rules.yaml
-# Workaround since `--namespace monitoring` from above is not preserved
+ Workaround since `--namespace monitoring` from above is not preserved
 echo "  namespace: monitoring" >> ./manifests/prometheus/prometheus-rules.yaml
 
 # Create ConfigMap for an external url

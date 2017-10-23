@@ -20,10 +20,12 @@ spec:
       - name: prometheus
         image: prom/prometheus:v1.7.0
         args:
-          - '-storage.local.retention=12h'
+          - '-storage.local.retention=168h'
           - '-storage.local.memory-chunks=500000'
+          - '-storage.local.path=/var/prometheus'
           - '-config.file=/etc/prometheus/prometheus.yaml'
-          - '-alertmanager.url=http://alertmanager:9093/'
+          - '-web.external-url=http://127.0.0.1:8001/api/v1/proxy/namespaces/monitoring/services/prometheus:9090'
+          - '-web.route-prefix=/'
         ports:
         - name: webui
           containerPort: 9090
@@ -39,6 +41,8 @@ spec:
           mountPath: /etc/prometheus
         - name: rules-volume
           mountPath: /etc/prometheus-rules
+        - name: data-volume
+          mountPath: /var/prometheus
       volumes:
       - name: config-volume
         configMap:
@@ -46,3 +50,6 @@ spec:
       - name: rules-volume
         configMap:
           name: prometheus-rules
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: prometheus-data

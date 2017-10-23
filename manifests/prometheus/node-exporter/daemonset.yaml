@@ -22,5 +22,29 @@ spec:
           #^ must be an IANA_SVC_NAME (at most 15 characters, ..)
           containerPort: 9100
           hostPort: 9100
+        volumeMounts:
+        - name: host-fs-proc
+          mountPath: /host/proc
+          readOnly: true
+        - name: host-fs-sys
+          mountPath: /host/sys
+          readOnly: true
+        - name: host-fs-rootfs
+          mountPath: /rootfs
+          readOnly: true
+        args:
+          - '--collector.procfs=/host/proc'
+          - '--collector.sysfs=/host/sys'
+          - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($|/)"'
       hostNetwork: true
       hostPID: true
+      volumes:
+      - name: host-fs-proc
+        hostPath:
+          path: /proc
+      - name: host-fs-sys
+        hostPath:
+          path: /sys
+      - name: host-fs-rootfs
+        hostPath:
+          path: /

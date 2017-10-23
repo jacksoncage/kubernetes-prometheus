@@ -6,10 +6,15 @@ metadata:
   labels:
     app: grafana
     component: core
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
-    - port: 3000
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 3000
   selector:
     app: grafana
     component: core
